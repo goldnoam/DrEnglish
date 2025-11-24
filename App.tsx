@@ -144,6 +144,7 @@ const App: React.FC = () => {
   
   // Dragging state
   const [isDragging, setIsDragging] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
   
   const [history, setHistory] = useState<QuestionHistory[]>([]);
   
@@ -327,16 +328,25 @@ const App: React.FC = () => {
 
   const handleDragEnd = () => {
     setIsDragging(false);
+    setIsDragOver(false);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
+    if (status !== AnswerStatus.IDLE) return;
     e.dataTransfer.dropEffect = "copy";
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
+    setIsDragOver(false);
     const option = e.dataTransfer.getData("text/plain");
     if (status === AnswerStatus.IDLE && option) {
       setSelectedOption(option);
@@ -611,14 +621,16 @@ const App: React.FC = () => {
                   <span>{currentQuestion.sentencePre}</span>
                   <span 
                     onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
-                    className={`inline-block min-w-[120px] px-2 border-b-4 text-center mx-1 transition-all duration-300 rounded
-                    ${selectedOption ? 'text-indigo-400 border-indigo-500/50' : 'text-transparent border-slate-700'}
-                    ${status === AnswerStatus.CORRECT ? '!text-green-400 !border-green-500' : ''}
-                    ${status === AnswerStatus.INCORRECT ? '!text-red-400 !border-red-500' : ''}
-                    ${isDragging ? 'border-dashed border-indigo-400 bg-indigo-500/10 scale-105' : ''}
+                    className={`inline-block min-w-[140px] px-4 py-1 border-b-4 text-center mx-1 transition-all duration-300 rounded-lg relative align-bottom
+                    ${selectedOption ? 'text-indigo-300 border-indigo-500/50 bg-indigo-900/10' : 'text-transparent border-slate-700 bg-slate-800/30'}
+                    ${status === AnswerStatus.CORRECT ? '!text-green-400 !border-green-500 !bg-green-900/10' : ''}
+                    ${status === AnswerStatus.INCORRECT ? '!text-red-400 !border-red-500 !bg-red-900/10' : ''}
+                    ${isDragging && !selectedOption ? 'border-dashed border-indigo-400/50 animate-pulse' : ''}
+                    ${isDragOver ? '!border-indigo-400 !bg-indigo-500/20 scale-105 shadow-[0_0_15px_rgba(99,102,241,0.3)]' : ''}
                   `}>
-                    {selectedOption || (isDragging ? "DROP HERE" : "_______")}
+                    {selectedOption || (isDragging ? <span className="text-xs text-indigo-300 font-bold tracking-widest uppercase">Drop Here</span> : "_______")}
                   </span>
                   
                   {currentQuestion.baseVerb && (
