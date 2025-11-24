@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type, Schema } from "@google/genai";
-import { GrammarQuestion, GrammarTopic } from "../types";
+import { GrammarQuestion, GrammarTopic, Difficulty } from "../types";
 
 const apiKey = process.env.API_KEY || '';
 const ai = new GoogleGenAI({ apiKey });
@@ -41,13 +41,32 @@ const questionSchema: Schema = {
   },
 };
 
-const getPromptForTopic = (topic: GrammarTopic, count: number): string => {
+const getPromptForTopic = (topic: GrammarTopic, count: number, difficulty: Difficulty): string => {
   const basePrompt = `Generate ${count} unique, fun, and engaging English grammar questions for 10-14 year olds.`;
+  
+  let difficultyInstruction = "";
+  switch (difficulty) {
+    case 'easy':
+      difficultyInstruction = "DIFFICULTY: EASY. Use simple sentence structures, common vocabulary, and obvious distractors that are clearly wrong.";
+      break;
+    case 'medium':
+      difficultyInstruction = "DIFFICULTY: MEDIUM. Use compound sentences, slightly more advanced vocabulary, and distractors that include common mistakes.";
+      break;
+    case 'hard':
+      difficultyInstruction = "DIFFICULTY: HARD. Use complex sentence structures, context clues, and subtle distractors (e.g., similar spellings or strictly grammatical nuances).";
+      break;
+  }
+
+  const instructions = `
+    ${basePrompt}
+    ${difficultyInstruction}
+    Ensure the "baseVerb" acts as a helpful hint.
+  `;
   
   switch (topic) {
     case 'present_progressive':
       return `
-        ${basePrompt}
+        ${instructions}
         Topic: "Present Progressive" (Present Continuous).
         Contexts: School, Hobbies, Friends, Technology, Sports, Animals.
         
@@ -65,7 +84,7 @@ const getPromptForTopic = (topic: GrammarTopic, count: number): string => {
     
     case 'pronouns':
       return `
-        ${basePrompt}
+        ${instructions}
         Topic: "Subject Pronouns" (He, She, It, They, We, You).
         
         Task:
@@ -82,7 +101,7 @@ const getPromptForTopic = (topic: GrammarTopic, count: number): string => {
 
     case 'has_have':
       return `
-        ${basePrompt}
+        ${instructions}
         Topic: "Has vs Have" (Present Simple).
         
         Task:
@@ -99,7 +118,7 @@ const getPromptForTopic = (topic: GrammarTopic, count: number): string => {
 
     case 'am_is_are':
       return `
-        ${basePrompt}
+        ${instructions}
         Topic: "To Be" (Am, Is, Are) - Affirmative.
         
         Task:
@@ -116,7 +135,7 @@ const getPromptForTopic = (topic: GrammarTopic, count: number): string => {
 
     case 'negatives':
       return `
-        ${basePrompt}
+        ${instructions}
         Topic: "Negative To Be" (isn't, aren't, 'm not).
         
         Task:
@@ -133,7 +152,7 @@ const getPromptForTopic = (topic: GrammarTopic, count: number): string => {
 
     case 'adjectives_adverbs':
       return `
-        ${basePrompt}
+        ${instructions}
         Topic: "Adjectives vs Adverbs".
         
         Task:
@@ -150,7 +169,7 @@ const getPromptForTopic = (topic: GrammarTopic, count: number): string => {
 
     case 'past_tense':
       return `
-        ${basePrompt}
+        ${instructions}
         Topic: "Past Simple Verbs" (Regular and Irregular).
         Contexts: Adventure stories, Ancient History, School memories, Funny accidents, Weekend trips, Science discoveries.
         
@@ -173,10 +192,10 @@ const getPromptForTopic = (topic: GrammarTopic, count: number): string => {
   }
 };
 
-export const fetchGrammarQuestions = async (topic: GrammarTopic, count: number = 10): Promise<GrammarQuestion[]> => {
+export const fetchGrammarQuestions = async (topic: GrammarTopic, count: number = 10, difficulty: Difficulty = 'medium'): Promise<GrammarQuestion[]> => {
   try {
     const model = 'gemini-2.5-flash';
-    const prompt = getPromptForTopic(topic, count);
+    const prompt = getPromptForTopic(topic, count, difficulty);
 
     const response = await ai.models.generateContent({
       model,

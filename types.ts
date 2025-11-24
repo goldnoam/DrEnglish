@@ -1,6 +1,9 @@
 
 export type GrammarTopic = 'present_progressive' | 'pronouns' | 'has_have' | 'am_is_are' | 'negatives' | 'adjectives_adverbs' | 'past_tense';
 
+export type Difficulty = 'easy' | 'medium' | 'hard';
+export type GameMode = 'practice' | 'timed';
+
 export interface GrammarQuestion {
   id: string;
   sentencePre: string;
@@ -15,6 +18,8 @@ export interface GameState {
   score: number;
   streak: number;
   totalAnswered: number;
+  timeLeft: number; // in seconds
+  isGameOver: boolean;
 }
 
 export interface QuestionHistory {
@@ -22,6 +27,7 @@ export interface QuestionHistory {
   selectedOption: string;
   isCorrect: boolean;
   timestamp: number;
+  timeTaken: number; // time taken to answer in seconds
 }
 
 export enum AnswerStatus {
