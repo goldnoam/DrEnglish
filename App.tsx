@@ -686,15 +686,15 @@ const App: React.FC = () => {
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
-                    className={`inline-block min-w-[140px] px-4 py-1 border-b-4 text-center mx-1 transition-all duration-300 rounded-lg relative align-bottom
+                    className={`inline-block min-w-[140px] px-4 py-1 border-b-4 text-center mx-1 transition-all duration-200 rounded-xl relative align-bottom
                     ${selectedOption ? 'text-indigo-300 border-indigo-500/50 bg-indigo-900/10' : 'text-transparent border-slate-700 bg-slate-800/30'}
                     ${status === AnswerStatus.CORRECT ? '!text-green-400 !border-green-500 !bg-green-900/10' : ''}
                     ${status === AnswerStatus.INCORRECT ? '!text-red-400 !border-red-500 !bg-red-900/10' : ''}
-                    ${isDragging && !selectedOption ? 'border-dashed border-indigo-400/50 bg-indigo-900/10 animate-pulse' : ''}
-                    ${isDragOver ? '!border-indigo-400 !bg-indigo-500/20 scale-105 shadow-[0_0_15px_rgba(99,102,241,0.3)]' : ''}
+                    ${isDragging && !selectedOption && !isDragOver ? 'border-dashed border-indigo-400/50 bg-indigo-900/20 animate-pulse' : ''}
+                    ${isDragOver ? '!border-indigo-400 !bg-indigo-500/40 scale-110 shadow-[0_0_25px_rgba(99,102,241,0.6)] ring-4 ring-indigo-500/30 z-20' : ''}
                     ${isShaking ? 'shake-animation !border-red-500/80 !bg-red-900/20' : ''}
                   `}>
-                    {selectedOption || (isDragging ? <span className="text-xs text-indigo-300 font-bold tracking-widest uppercase">Drop Here</span> : "_______")}
+                    {selectedOption || (isDragging ? <span className={`text-xs font-bold tracking-widest uppercase transition-colors duration-200 ${isDragOver ? 'text-white' : 'text-indigo-300'}`}>Drop Here</span> : "_______")}
                   </span>
                   
                   {currentQuestion.baseVerb && (
