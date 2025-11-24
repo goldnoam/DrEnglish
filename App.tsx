@@ -146,6 +146,9 @@ const App: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
   
+  // Feedback animation state
+  const [isShaking, setIsShaking] = useState(false);
+  
   const [history, setHistory] = useState<QuestionHistory[]>([]);
   
   const [gameState, setGameState] = useState<GameState>({
@@ -158,8 +161,8 @@ const App: React.FC = () => {
 
   const timerRef = useRef<number | null>(null);
 
-  // Increased default count to 15
-  const loadQuestions = useCallback(async (topic: GrammarTopic, subTopic: string | undefined, count = 15, diff: Difficulty, append = false) => {
+  // Increased default count to 20 for comprehensive practice
+  const loadQuestions = useCallback(async (topic: GrammarTopic, subTopic: string | undefined, count = 20, diff: Difficulty, append = false) => {
     setLoading(true);
     setError(null);
     try {
@@ -190,21 +193,22 @@ const App: React.FC = () => {
     };
   }, [view, gameMode, gameState.isGameOver, loading, questions.length]);
 
-  // Effect to load questions when entering game - Requesting 15
+  // Effect to load questions when entering game - Requesting 20
   useEffect(() => {
     if (view === 'GAME' && selectedTopic) {
-      loadQuestions(selectedTopic, selectedSubTopic, 15, difficulty);
+      loadQuestions(selectedTopic, selectedSubTopic, 20, difficulty);
       setQuestionStartTime(Date.now());
     } else if (view !== 'GAME') {
       setQuestions([]);
       setCurrentQIndex(0);
       setStatus(AnswerStatus.IDLE);
       setSelectedOption(null);
+      setIsShaking(false);
       if (timerRef.current) clearInterval(timerRef.current);
     }
   }, [view, selectedTopic, selectedSubTopic, difficulty, loadQuestions]);
 
-  // Pre-fetch more questions - Requesting 10 for buffer
+  // Pre-fetch more questions when running low (buffer around 18/20)
   useEffect(() => {
     if (view === 'GAME' && selectedTopic && questions.length > 0 && currentQIndex >= questions.length - 2 && !loading && !gameState.isGameOver) {
        fetchGrammarQuestions(selectedTopic, selectedSubTopic, 10, difficulty).then(newQs => {
@@ -287,6 +291,7 @@ const App: React.FC = () => {
     
     setSelectedOption(null);
     setStatus(AnswerStatus.IDLE);
+    setIsShaking(false);
     setCurrentQIndex(prev => prev + 1);
     setQuestionStartTime(Date.now());
   };
@@ -350,6 +355,14 @@ const App: React.FC = () => {
     const option = e.dataTransfer.getData("text/plain");
     if (status === AnswerStatus.IDLE && option) {
       setSelectedOption(option);
+      
+      // Immediate visual feedback if incorrect
+      const currentQuestion = questions[currentQIndex];
+      if (currentQuestion && option !== currentQuestion.correctAnswer) {
+        setIsShaking(true);
+        // Remove shaking after animation completes
+        setTimeout(() => setIsShaking(false), 500);
+      }
     }
   };
 
@@ -513,7 +526,7 @@ const App: React.FC = () => {
           <p className="text-slate-400 mb-6">{error}</p>
           <div className="flex gap-4 justify-center">
             <Button onClick={() => handleBackToSubMenu()} variant="secondary">Back</Button>
-            <Button onClick={() => selectedTopic && loadQuestions(selectedTopic, selectedSubTopic, 15, difficulty)}>Try Again</Button>
+            <Button onClick={() => selectedTopic && loadQuestions(selectedTopic, selectedSubTopic, 20, difficulty)}>Try Again</Button>
           </div>
         </div>
       </div>
@@ -557,6 +570,16 @@ const App: React.FC = () => {
   // 6. GAME SCREEN
   return (
     <div className="min-h-screen bg-slate-950 py-8 px-4 font-sans selection:bg-indigo-500/30 text-slate-200">
+      <style>{`
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+          20%, 40%, 60%, 80% { transform: translateX(4px); }
+        }
+        .shake-animation {
+          animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+      `}</style>
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <header className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -600,11 +623,11 @@ const App: React.FC = () => {
         {/* Question Card */}
         {currentQuestion && (
           <div className="bg-slate-900 rounded-3xl shadow-xl shadow-slate-950/50 border border-slate-800 overflow-hidden relative">
-            {/* Progress Bar */}
+            {/* Progress Bar - Total of 20 */}
             <div className="h-1 bg-slate-800 w-full">
               <div 
                 className="h-full bg-indigo-500 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(99,102,241,0.5)]"
-                style={{ width: `${((currentQIndex + 1) % 15) * (100/15)}%` }}
+                style={{ width: `${((currentQIndex + 1) % 20) * (100/20)}%` }}
               />
             </div>
 
@@ -616,7 +639,7 @@ const App: React.FC = () => {
                    </span>
                 </div>
                 
-                {/* Sentence Display - Now Drop Zone */}
+                {/* Sentence Display - Drop Zone */}
                 <div className="text-2xl md:text-3xl font-medium leading-relaxed text-slate-100 my-6">
                   <span>{currentQuestion.sentencePre}</span>
                   <span 
@@ -627,8 +650,9 @@ const App: React.FC = () => {
                     ${selectedOption ? 'text-indigo-300 border-indigo-500/50 bg-indigo-900/10' : 'text-transparent border-slate-700 bg-slate-800/30'}
                     ${status === AnswerStatus.CORRECT ? '!text-green-400 !border-green-500 !bg-green-900/10' : ''}
                     ${status === AnswerStatus.INCORRECT ? '!text-red-400 !border-red-500 !bg-red-900/10' : ''}
-                    ${isDragging && !selectedOption ? 'border-dashed border-indigo-400/50 animate-pulse' : ''}
+                    ${isDragging && !selectedOption ? 'border-dashed border-indigo-400/50 bg-indigo-900/10 animate-pulse' : ''}
                     ${isDragOver ? '!border-indigo-400 !bg-indigo-500/20 scale-105 shadow-[0_0_15px_rgba(99,102,241,0.3)]' : ''}
+                    ${isShaking ? 'shake-animation !border-red-500/80 !bg-red-900/20' : ''}
                   `}>
                     {selectedOption || (isDragging ? <span className="text-xs text-indigo-300 font-bold tracking-widest uppercase">Drop Here</span> : "_______")}
                   </span>

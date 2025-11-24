@@ -36,9 +36,9 @@ export const Feedback: React.FC<FeedbackProps> = ({ status, correctAnswer, expla
           </h3>
           
           {!isCorrect && (
-            <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-700 shadow-inner">
+            <div className="bg-slate-900 p-4 rounded-xl border border-red-900/50 shadow-inner ring-1 ring-red-500/20">
                <p className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-1">Correct Answer</p>
-               <p className="text-xl font-bold text-green-400">{correctAnswer}</p>
+               <p className="text-xl font-black text-green-400 tracking-wide">{correctAnswer}</p>
             </div>
           )}
 

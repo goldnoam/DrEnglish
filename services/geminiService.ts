@@ -202,7 +202,7 @@ const getPromptForTopic = (topic: GrammarTopic, subTopic: string | undefined, co
   }
 };
 
-export const fetchGrammarQuestions = async (topic: GrammarTopic, subTopic: string | undefined, count: number = 10, difficulty: Difficulty = 'medium'): Promise<GrammarQuestion[]> => {
+export const fetchGrammarQuestions = async (topic: GrammarTopic, subTopic: string | undefined, count: number = 20, difficulty: Difficulty = 'medium'): Promise<GrammarQuestion[]> => {
   try {
     const model = 'gemini-2.5-flash';
     const prompt = getPromptForTopic(topic, subTopic, count, difficulty);
