@@ -162,8 +162,8 @@ const App: React.FC = () => {
 
   const timerRef = useRef<number | null>(null);
 
-  // Increased default count to 20 for comprehensive practice
-  const loadQuestions = useCallback(async (topic: GrammarTopic, subTopic: string | undefined, count = 20, diff: Difficulty, append = false) => {
+  // Increased default count to 30 for comprehensive practice and better randomness
+  const loadQuestions = useCallback(async (topic: GrammarTopic, subTopic: string | undefined, count = 30, diff: Difficulty, append = false) => {
     setLoading(true);
     setError(null);
     try {
@@ -194,10 +194,10 @@ const App: React.FC = () => {
     };
   }, [view, gameMode, gameState.isGameOver, loading, questions.length]);
 
-  // Effect to load questions when entering game - Requesting 20
+  // Effect to load questions when entering game - Requesting 30
   useEffect(() => {
     if (view === 'GAME' && selectedTopic) {
-      loadQuestions(selectedTopic, selectedSubTopic, 20, difficulty);
+      loadQuestions(selectedTopic, selectedSubTopic, 30, difficulty);
       setQuestionStartTime(Date.now());
     } else if (view !== 'GAME') {
       setQuestions([]);
@@ -209,10 +209,10 @@ const App: React.FC = () => {
     }
   }, [view, selectedTopic, selectedSubTopic, difficulty, loadQuestions]);
 
-  // Pre-fetch more questions when running low (buffer around 18/20)
+  // Pre-fetch more questions when running low (buffer around 28/30)
   useEffect(() => {
     if (view === 'GAME' && selectedTopic && questions.length > 0 && currentQIndex >= questions.length - 2 && !loading && !gameState.isGameOver) {
-       fetchGrammarQuestions(selectedTopic, selectedSubTopic, 10, difficulty).then(newQs => {
+       fetchGrammarQuestions(selectedTopic, selectedSubTopic, 15, difficulty).then(newQs => {
          setQuestions(prev => [...prev, ...newQs]);
        });
     }
@@ -533,7 +533,7 @@ const App: React.FC = () => {
           <p className="text-slate-400 mb-6">{error}</p>
           <div className="flex gap-4 justify-center">
             <Button onClick={() => handleBackToSubMenu()} variant="secondary">Back</Button>
-            <Button onClick={() => selectedTopic && loadQuestions(selectedTopic, selectedSubTopic, 20, difficulty)}>Try Again</Button>
+            <Button onClick={() => selectedTopic && loadQuestions(selectedTopic, selectedSubTopic, 30, difficulty)}>Try Again</Button>
           </div>
         </div>
       </div>
@@ -663,11 +663,11 @@ const App: React.FC = () => {
         {/* Question Card */}
         {currentQuestion && (
           <div className="bg-slate-900 rounded-3xl shadow-xl shadow-slate-950/50 border border-slate-800 overflow-hidden relative">
-            {/* Progress Bar - Total of 20 */}
+            {/* Progress Bar - Total of 30 */}
             <div className="h-1 bg-slate-800 w-full">
               <div 
                 className="h-full bg-indigo-500 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(99,102,241,0.5)]"
-                style={{ width: `${((currentQIndex + 1) % 20) * (100/20)}%` }}
+                style={{ width: `${((currentQIndex + 1) % 30) * (100/30)}%` }}
               />
             </div>
 

@@ -42,7 +42,10 @@ const questionSchema: Schema = {
 };
 
 const getPromptForTopic = (topic: GrammarTopic, subTopic: string | undefined, count: number, difficulty: Difficulty): string => {
-  const basePrompt = `Generate ${count} unique, fun, and engaging English grammar questions for 10-14 year olds.`;
+  // Add a random seed to ensure unique generations every time
+  const randomSeed = Math.floor(Math.random() * 100000);
+  
+  const basePrompt = `Generate ${count} unique, fun, random, and engaging English grammar questions for 10-14 year olds. Random Seed: ${randomSeed}.`;
   
   let difficultyInstruction = "";
   switch (difficulty) {
@@ -68,6 +71,7 @@ const getPromptForTopic = (topic: GrammarTopic, subTopic: string | undefined, co
     ${difficultyInstruction}
     ${subTopic ? `FOCUS SUB-TOPIC: "${subTopic}". Ensure all questions strictly practice this specific aspect.` : ''}
     Ensure the "baseVerb" acts as a helpful hint.
+    CRITICAL: Ensure the questions are RANDOM and varied. Do not repeat the same patterns.
   `;
   
   switch (topic) {
@@ -75,7 +79,7 @@ const getPromptForTopic = (topic: GrammarTopic, subTopic: string | undefined, co
       return `
         ${instructions}
         Topic: "Present Progressive" (Present Continuous).
-        Contexts: School, Hobbies, Friends, Technology, Sports, Animals.
+        Contexts: School, Hobbies, Friends, Technology, Sports, Animals, Space, Fantasy.
         
         Task:
         1. Create a sentence with a missing verb in Present Progressive form.
@@ -178,7 +182,7 @@ const getPromptForTopic = (topic: GrammarTopic, subTopic: string | undefined, co
       return `
         ${instructions}
         Topic: "Past Simple Verbs" (Regular and Irregular).
-        Contexts: Adventure, History, School, Funny Accidents, Science.
+        Contexts: Adventure, History, School, Funny Accidents, Science, Mystery, Daily Life.
         
         Task:
         1. Create interesting sentences describing completed actions in the past.
@@ -202,7 +206,7 @@ const getPromptForTopic = (topic: GrammarTopic, subTopic: string | undefined, co
   }
 };
 
-export const fetchGrammarQuestions = async (topic: GrammarTopic, subTopic: string | undefined, count: number = 20, difficulty: Difficulty = 'medium'): Promise<GrammarQuestion[]> => {
+export const fetchGrammarQuestions = async (topic: GrammarTopic, subTopic: string | undefined, count: number = 30, difficulty: Difficulty = 'medium'): Promise<GrammarQuestion[]> => {
   try {
     const model = 'gemini-2.5-flash';
     const prompt = getPromptForTopic(topic, subTopic, count, difficulty);
@@ -213,7 +217,7 @@ export const fetchGrammarQuestions = async (topic: GrammarTopic, subTopic: strin
       config: {
         responseMimeType: "application/json",
         responseSchema: questionSchema,
-        temperature: 0.7,
+        temperature: 0.8, // Increased temperature for more randomness
       },
     });
 
@@ -224,17 +228,20 @@ export const fetchGrammarQuestions = async (topic: GrammarTopic, subTopic: strin
 
     const rawQuestions = JSON.parse(jsonText);
     
-    // Helper to shuffle options
-    const shuffleArray = (array: string[]) => {
+    // Helper to shuffle arrays
+    const shuffleArray = (array: any[]) => {
       return array.sort(() => Math.random() - 0.5);
     };
 
     // Add local IDs and ensure options are shuffled
-    return rawQuestions.map((q: any, index: number) => ({
+    const processedQuestions = rawQuestions.map((q: any, index: number) => ({
       ...q,
-      id: `q-${Date.now()}-${index}`,
+      id: `q-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
       options: shuffleArray(q.options || [q.correctAnswer]), 
     }));
+    
+    // Shuffle the questions themselves so they aren't in generated order
+    return shuffleArray(processedQuestions);
 
   } catch (error) {
     console.error("Error generating questions:", error);
