@@ -151,18 +151,21 @@ const getPromptForTopic = (topic: GrammarTopic, count: number): string => {
     case 'past_tense':
       return `
         ${basePrompt}
-        Topic: "Past Simple Verbs".
+        Topic: "Past Simple Verbs" (Regular and Irregular).
+        Contexts: Adventure stories, Ancient History, School memories, Funny accidents, Weekend trips, Science discoveries.
         
         Task:
-        1. Create a sentence describing an action that happened in the past (yesterday, last year, etc).
-        2. "baseVerb" should be the infinitive verb.
-        3. Options should include correct past tense (regular -ed or irregular), present tense, and mistakes.
+        1. Create interesting sentences describing completed actions in the past. 
+        2. Use a good mix of Regular verbs (walk -> walked) and Irregular verbs (buy -> bought, catch -> caught).
+        3. "baseVerb" must be the infinitive form.
+        4. Vary the sentence structure. Don't just start with "Yesterday". Use clauses like "When the bell rang...", "In 1492...", "Last summer...".
+        5. Options must include: the correct past tense, the base form, the present tense, and a common mistake (like "buyed" or "eated").
         
         Example:
-        Sentence: "Yesterday, I _______ a movie."
-        baseVerb: "watch"
-        correctAnswer: "watched"
-        options: ["watched", "watch", "watching", "watches"]
+        Sentence: "The explorer _______ a hidden treasure map in the cave."
+        baseVerb: "find"
+        correctAnswer: "found"
+        options: ["found", "finded", "find", "finding"]
       `;
       
     default:
