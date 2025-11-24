@@ -14,8 +14,21 @@ export interface GrammarQuestion {
   options: string[];
 }
 
+export interface SubCategory {
+  id: string;
+  label: string;
+  desc: string;
+}
+
+export interface ScoreBreakdown {
+  base: number;
+  streak: number;
+  speed: number;
+}
+
 export interface GameState {
   score: number;
+  scoreBreakdown: ScoreBreakdown;
   streak: number;
   totalAnswered: number;
   timeLeft: number; // in seconds

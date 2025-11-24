@@ -153,6 +153,7 @@ const App: React.FC = () => {
   
   const [gameState, setGameState] = useState<GameState>({
     score: 0,
+    scoreBreakdown: { base: 0, streak: 0, speed: 0 },
     streak: 0,
     totalAnswered: 0,
     timeLeft: 60,
@@ -226,6 +227,7 @@ const App: React.FC = () => {
     setSelectedSubTopic(subTopicId);
     setGameState({ 
       score: 0, 
+      scoreBreakdown: { base: 0, streak: 0, speed: 0 },
       streak: 0, 
       totalAnswered: 0, 
       timeLeft: 60, 
@@ -263,15 +265,20 @@ const App: React.FC = () => {
     }]);
 
     if (isCorrect) {
-      let points = 10;
-      points += (gameState.streak * 2);
+      const basePoints = 10;
+      const streakBonus = (gameState.streak * 2);
       const speedBonus = Math.floor(Math.max(0, 5 - timeTaken) * 2);
-      points += speedBonus;
+      const totalPoints = basePoints + streakBonus + speedBonus;
 
       setStatus(AnswerStatus.CORRECT);
       setGameState(prev => ({
         ...prev,
-        score: prev.score + points,
+        score: prev.score + totalPoints,
+        scoreBreakdown: {
+          base: prev.scoreBreakdown.base + basePoints,
+          streak: prev.scoreBreakdown.streak + streakBonus,
+          speed: prev.scoreBreakdown.speed + speedBonus
+        },
         streak: prev.streak + 1,
         totalAnswered: prev.totalAnswered + 1,
       }));
@@ -544,7 +551,7 @@ const App: React.FC = () => {
           <h2 className="text-4xl font-black text-white mb-2">{gameMode === 'timed' ? "Time's Up!" : "Session Complete"}</h2>
           <p className="text-slate-400 mb-8">Great effort! Here is how you did:</p>
           
-          <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
               <p className="text-slate-500 text-xs font-bold uppercase">Final Score</p>
               <p className="text-3xl font-black text-white">{gameState.score}</p>
@@ -552,6 +559,39 @@ const App: React.FC = () => {
             <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
               <p className="text-slate-500 text-xs font-bold uppercase">Answered</p>
               <p className="text-3xl font-black text-white">{gameState.totalAnswered}</p>
+            </div>
+          </div>
+
+          {/* Score Breakdown */}
+          <div className="bg-slate-950 p-6 rounded-2xl border border-slate-800 mb-8 w-full text-left">
+            <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4 border-b border-slate-800 pb-2">Score Breakdown</h3>
+            
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-slate-300 font-medium flex items-center gap-2">
+                 <span className="w-2 h-2 rounded-full bg-indigo-500"></span> Base Points
+              </span>
+              <span className="text-white font-bold">{gameState.scoreBreakdown.base}</span>
+            </div>
+            
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-slate-300 font-medium flex items-center gap-2">
+                 <span className="w-2 h-2 rounded-full bg-orange-500"></span> Streak Bonus
+              </span>
+              <span className="text-white font-bold">+{gameState.scoreBreakdown.streak}</span>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-slate-300 font-medium flex items-center gap-2">
+                 <span className="w-2 h-2 rounded-full bg-blue-500"></span> Speed Bonus
+              </span>
+              <span className="text-white font-bold">+{gameState.scoreBreakdown.speed}</span>
+            </div>
+            
+            <div className="mt-4 pt-3 border-t border-slate-800 flex justify-between items-center">
+               <span className="text-slate-500 text-sm">Penalties (Incorrect)</span>
+               <span className="text-red-400 font-bold">
+                 -{ (gameState.scoreBreakdown.base + gameState.scoreBreakdown.streak + gameState.scoreBreakdown.speed) - gameState.score }
+               </span>
             </div>
           </div>
 
