@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { fetchGrammarQuestions } from './services/geminiService';
 import { GrammarQuestion, GameState, AnswerStatus, QuestionHistory, GrammarTopic } from './types';
@@ -41,6 +42,20 @@ const TOPICS: { id: GrammarTopic; title: string; desc: string; color: string; ic
     color: 'bg-red-500',
     icon: '🚫'
   },
+  {
+    id: 'adjectives_adverbs',
+    title: 'Adj. vs Adverbs',
+    desc: 'Describing Things vs Actions',
+    color: 'bg-pink-500',
+    icon: '🎨'
+  },
+  {
+    id: 'past_tense',
+    title: 'Past Tense',
+    desc: 'Yesterday, Last week...',
+    color: 'bg-yellow-500',
+    icon: '⏪'
+  }
 ];
 
 const App: React.FC = () => {
@@ -313,16 +328,27 @@ const App: React.FC = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
                   {currentQuestion.options.map((option, idx) => {
                     let buttonStyle = "bg-white border-gray-200 text-gray-600 hover:border-indigo-300 hover:bg-gray-50";
+                    let icon = null;
                     
-                    if (selectedOption === option) {
+                    if (selectedOption === option && status === AnswerStatus.IDLE) {
                       buttonStyle = "bg-indigo-50 border-indigo-500 text-indigo-700 ring-2 ring-indigo-200";
                     }
 
                     if (status !== AnswerStatus.IDLE) {
                       if (option === currentQuestion.correctAnswer) {
                         buttonStyle = "bg-green-100 border-green-500 text-green-800 ring-2 ring-green-200";
+                        icon = (
+                          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-green-600">
+                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                          </span>
+                        );
                       } else if (selectedOption === option && status === AnswerStatus.INCORRECT) {
                         buttonStyle = "bg-red-100 border-red-500 text-red-800 ring-2 ring-red-200 opacity-100";
+                        icon = (
+                          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-red-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" /></svg>
+                          </span>
+                        );
                       } else {
                         buttonStyle = "bg-gray-50 border-gray-100 text-gray-400 opacity-50 cursor-not-allowed";
                       }
@@ -333,9 +359,10 @@ const App: React.FC = () => {
                         key={`${currentQuestion.id}-opt-${idx}`}
                         onClick={() => status === AnswerStatus.IDLE && setSelectedOption(option)}
                         disabled={status !== AnswerStatus.IDLE}
-                        className={`p-4 rounded-xl border-2 text-lg font-bold transition-all duration-200 transform active:scale-98 ${buttonStyle} shadow-sm`}
+                        className={`relative p-4 rounded-xl border-2 text-lg font-bold transition-all duration-200 transform active:scale-98 ${buttonStyle} shadow-sm`}
                       >
-                        {option}
+                        <span className="relative z-10">{option}</span>
+                        {icon}
                       </button>
                     );
                   })}

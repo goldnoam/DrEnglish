@@ -1,4 +1,5 @@
-export type GrammarTopic = 'present_progressive' | 'pronouns' | 'has_have' | 'am_is_are' | 'negatives';
+
+export type GrammarTopic = 'present_progressive' | 'pronouns' | 'has_have' | 'am_is_are' | 'negatives' | 'adjectives_adverbs' | 'past_tense';
 
 export interface GrammarQuestion {
   id: string;

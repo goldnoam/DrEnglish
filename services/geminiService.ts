@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { GrammarQuestion, GrammarTopic } from "../types";
 
@@ -129,6 +130,40 @@ const getPromptForTopic = (topic: GrammarTopic, count: number): string => {
         correctAnswer: "isn't"
         options: ["isn't", "aren't", "not is", "amn't"]
       `;
+
+    case 'adjectives_adverbs':
+      return `
+        ${basePrompt}
+        Topic: "Adjectives vs Adverbs".
+        
+        Task:
+        1. Create a sentence where the student must choose between an adjective (describing a noun) or an adverb (describing a verb).
+        2. "baseVerb" should be the root word (e.g. "quick", "loud").
+        3. Options should include the adjective, the adverb (-ly), and distractors (spelling or wrong form).
+        
+        Example:
+        Sentence: "The turtle walks very _______."
+        baseVerb: "slow"
+        correctAnswer: "slowly"
+        options: ["slowly", "slow", "slowness", "slowing"]
+      `;
+
+    case 'past_tense':
+      return `
+        ${basePrompt}
+        Topic: "Past Simple Verbs".
+        
+        Task:
+        1. Create a sentence describing an action that happened in the past (yesterday, last year, etc).
+        2. "baseVerb" should be the infinitive verb.
+        3. Options should include correct past tense (regular -ed or irregular), present tense, and mistakes.
+        
+        Example:
+        Sentence: "Yesterday, I _______ a movie."
+        baseVerb: "watch"
+        correctAnswer: "watched"
+        options: ["watched", "watch", "watching", "watches"]
+      `;
       
     default:
       return basePrompt;
@@ -245,6 +280,30 @@ const getFallbackQuestions = (topic: GrammarTopic): GrammarQuestion[] => {
           correctAnswer: "isn't",
           explanation: "It is not -> It isn't.",
           options: ["isn't", "aren't", "not is", "amn't"],
+        }
+      ];
+    case 'adjectives_adverbs':
+      return [
+        {
+          id: 'fb-aa-1',
+          sentencePre: "She sings very ",
+          sentencePost: ".",
+          baseVerb: "beautiful",
+          correctAnswer: "beautifully",
+          explanation: "We are describing how she sings (verb), so we need an adverb (-ly).",
+          options: ["beautifully", "beautiful", "beauty", "beautify"],
+        }
+      ];
+    case 'past_tense':
+      return [
+        {
+          id: 'fb-pt-1',
+          sentencePre: "Yesterday, I ",
+          sentencePost: " pizza for dinner.",
+          baseVerb: "eat",
+          correctAnswer: "ate",
+          explanation: "The past tense of 'eat' is 'ate'.",
+          options: ["ate", "eat", "eated", "eating"],
         }
       ];
     default:
