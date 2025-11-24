@@ -41,25 +41,32 @@ const questionSchema: Schema = {
   },
 };
 
-const getPromptForTopic = (topic: GrammarTopic, count: number, difficulty: Difficulty): string => {
+const getPromptForTopic = (topic: GrammarTopic, subTopic: string | undefined, count: number, difficulty: Difficulty): string => {
   const basePrompt = `Generate ${count} unique, fun, and engaging English grammar questions for 10-14 year olds.`;
   
   let difficultyInstruction = "";
   switch (difficulty) {
     case 'easy':
-      difficultyInstruction = "DIFFICULTY: EASY. Use simple sentence structures, common vocabulary, and obvious distractors that are clearly wrong.";
+      difficultyInstruction = "DIFFICULTY: EASY. Use short, simple SVO sentences (Subject-Verb-Object). Use high-frequency vocabulary. Distractors should be visually distinct and obviously wrong.";
+      break;
+    case 'intermediate':
+      difficultyInstruction = "DIFFICULTY: INTERMEDIATE. Use slightly longer sentences. Include simple compound sentences (using 'and', 'but'). Vocabulary should be common school level. Distractors should check for basic agreement errors.";
       break;
     case 'medium':
-      difficultyInstruction = "DIFFICULTY: MEDIUM. Use compound sentences, slightly more advanced vocabulary, and distractors that include common mistakes.";
+      difficultyInstruction = "DIFFICULTY: MEDIUM. Use mixed sentence structures. Include time markers and context clues. Distractors should include common grammatical misconceptions.";
+      break;
+    case 'advanced':
+      difficultyInstruction = "DIFFICULTY: ADVANCED. Use complex sentence structures with dependent clauses. Context should be richer. Distractors should be plausible but grammatically incorrect in the specific context.";
       break;
     case 'hard':
-      difficultyInstruction = "DIFFICULTY: HARD. Use complex sentence structures, context clues, and subtle distractors (e.g., similar spellings or strictly grammatical nuances).";
+      difficultyInstruction = "DIFFICULTY: HARD. Use sophisticated sentence structures and diverse contexts (Science, History, Literature). Focus on exceptions to rules and subtle nuances. Distractors should differ by only minor grammatical features.";
       break;
   }
 
   const instructions = `
     ${basePrompt}
     ${difficultyInstruction}
+    ${subTopic ? `FOCUS SUB-TOPIC: "${subTopic}". Ensure all questions strictly practice this specific aspect.` : ''}
     Ensure the "baseVerb" acts as a helpful hint.
   `;
   
@@ -136,12 +143,12 @@ const getPromptForTopic = (topic: GrammarTopic, count: number, difficulty: Diffi
     case 'negatives':
       return `
         ${instructions}
-        Topic: "Negative To Be" (isn't, aren't, 'm not).
+        Topic: "Negative Forms".
         
         Task:
-        1. Create a sentence that implies a negative state.
-        2. "baseVerb" should be "not be".
-        3. Options should include: isn't, aren't, 'm not, amn't (as distractor unless appropriate dialect), not is.
+        1. Create a sentence that implies a negative state using "to be" or "do/does".
+        2. "baseVerb" should be "not + verb".
+        3. Options should include: isn't, aren't, doesn't, don't.
         
         Example:
         Sentence: "He _______ at school, he is at home."
@@ -171,20 +178,23 @@ const getPromptForTopic = (topic: GrammarTopic, count: number, difficulty: Diffi
       return `
         ${instructions}
         Topic: "Past Simple Verbs" (Regular and Irregular).
-        Contexts: Adventure stories, Ancient History, School memories, Funny accidents, Weekend trips, Science discoveries.
+        Contexts: Adventure, History, School, Funny Accidents, Science.
         
         Task:
-        1. Create interesting sentences describing completed actions in the past. 
-        2. Use a good mix of Regular verbs (walk -> walked) and Irregular verbs (buy -> bought, catch -> caught).
-        3. "baseVerb" must be the infinitive form.
-        4. Vary the sentence structure. Don't just start with "Yesterday". Use clauses like "When the bell rang...", "In 1492...", "Last summer...".
-        5. Options must include: the correct past tense, the base form, the present tense, and a common mistake (like "buyed" or "eated").
+        1. Create interesting sentences describing completed actions in the past.
+        2. CRITICAL: Use a 50/50 mix of Regular verbs (walk->walked) and Irregular verbs (go->went, buy->bought).
+        3. CRITICAL: Vary the sentence structures significantly. 
+           - Do NOT start every sentence with "Yesterday" or "Last week".
+           - Use time clauses at the start: "When the volcano erupted...", "After the movie ended...", "In 1969...".
+           - Use complex sentences suitable for 10-14 year olds.
+        4. "baseVerb" must be the infinitive form.
+        5. Options must include: the correct past tense, the base form, the present tense, and a common mistake (like "buyed", "eated", "gode").
         
         Example:
-        Sentence: "The explorer _______ a hidden treasure map in the cave."
-        baseVerb: "find"
-        correctAnswer: "found"
-        options: ["found", "finded", "find", "finding"]
+        Sentence: "When the lights went out, I _______ a loud noise."
+        baseVerb: "hear"
+        correctAnswer: "heard"
+        options: ["heard", "heared", "hear", "hearing"]
       `;
       
     default:
@@ -192,10 +202,10 @@ const getPromptForTopic = (topic: GrammarTopic, count: number, difficulty: Diffi
   }
 };
 
-export const fetchGrammarQuestions = async (topic: GrammarTopic, count: number = 10, difficulty: Difficulty = 'medium'): Promise<GrammarQuestion[]> => {
+export const fetchGrammarQuestions = async (topic: GrammarTopic, subTopic: string | undefined, count: number = 10, difficulty: Difficulty = 'medium'): Promise<GrammarQuestion[]> => {
   try {
     const model = 'gemini-2.5-flash';
-    const prompt = getPromptForTopic(topic, count, difficulty);
+    const prompt = getPromptForTopic(topic, subTopic, count, difficulty);
 
     const response = await ai.models.generateContent({
       model,
@@ -234,101 +244,17 @@ export const fetchGrammarQuestions = async (topic: GrammarTopic, count: number =
 
 // Fallback data for offline/error mode
 const getFallbackQuestions = (topic: GrammarTopic): GrammarQuestion[] => {
-  switch (topic) {
-    case 'present_progressive':
-      return [
-        {
-          id: 'fb-pp-1',
-          sentencePre: "Look! The cat ",
-          sentencePost: " up the tree.",
-          baseVerb: "climb",
-          correctAnswer: "is climbing",
-          explanation: "Singular subject 'The cat' needs 'is' + verb-ing.",
-          options: ["is climbing", "are climbing", "climbing", "climb"],
-        },
-        {
-          id: 'fb-pp-2',
-          sentencePre: "We ",
-          sentencePost: " math right now.",
-          baseVerb: "study",
-          correctAnswer: "are studying",
-          explanation: "'We' is plural, so we use 'are'.",
-          options: ["are studying", "is studying", "studying", "studies"],
-        }
-      ];
-    case 'pronouns':
-      return [
-        {
-          id: 'fb-pro-1',
-          sentencePre: "_______ is my sister.",
-          sentencePost: "",
-          baseVerb: "Sarah",
-          correctAnswer: "She",
-          explanation: "Sarah is a girl, so we use 'She'.",
-          options: ["She", "He", "They", "It"],
-        }
-      ];
-    case 'has_have':
-      return [
-        {
-          id: 'fb-hh-1',
-          sentencePre: "I ",
-          sentencePost: " a new bike.",
-          baseVerb: "have",
-          correctAnswer: "have",
-          explanation: "With 'I', we use 'have'.",
-          options: ["have", "has", "having", "had"],
-        }
-      ];
-    case 'am_is_are':
-       return [
-        {
-          id: 'fb-aia-1',
-          sentencePre: "You ",
-          sentencePost: " my best friend.",
-          baseVerb: "be",
-          correctAnswer: "are",
-          explanation: "With 'You', we always use 'are'.",
-          options: ["are", "is", "am", "be"],
-        }
-      ];
-    case 'negatives':
-      return [
-        {
-          id: 'fb-neg-1',
-          sentencePre: "It ",
-          sentencePost: " raining today.",
-          baseVerb: "not be",
-          correctAnswer: "isn't",
-          explanation: "It is not -> It isn't.",
-          options: ["isn't", "aren't", "not is", "amn't"],
-        }
-      ];
-    case 'adjectives_adverbs':
-      return [
-        {
-          id: 'fb-aa-1',
-          sentencePre: "She sings very ",
-          sentencePost: ".",
-          baseVerb: "beautiful",
-          correctAnswer: "beautifully",
-          explanation: "We are describing how she sings (verb), so we need an adverb (-ly).",
-          options: ["beautifully", "beautiful", "beauty", "beautify"],
-        }
-      ];
-    case 'past_tense':
-      return [
-        {
-          id: 'fb-pt-1',
-          sentencePre: "Yesterday, I ",
-          sentencePost: " pizza for dinner.",
-          baseVerb: "eat",
-          correctAnswer: "ate",
-          explanation: "The past tense of 'eat' is 'ate'.",
-          options: ["ate", "eat", "eated", "eating"],
-        }
-      ];
-    default:
-      return [];
-  }
+  // Simple fallbacks just to keep app running
+  const base = {
+      id: 'fb-1',
+      sentencePre: "Example: The app is ",
+      sentencePost: " offline mode.",
+      baseVerb: "use",
+      correctAnswer: "using",
+      explanation: "This is a fallback question because the AI service is unreachable.",
+      options: ["using", "used", "uses", "use"],
+  };
+  
+  // Return a generic list for any topic if real fallbacks missing
+  return [base, {...base, id: 'fb-2'}, {...base, id: 'fb-3'}];
 };

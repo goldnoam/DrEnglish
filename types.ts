@@ -1,7 +1,7 @@
 
 export type GrammarTopic = 'present_progressive' | 'pronouns' | 'has_have' | 'am_is_are' | 'negatives' | 'adjectives_adverbs' | 'past_tense';
 
-export type Difficulty = 'easy' | 'medium' | 'hard';
+export type Difficulty = 'easy' | 'intermediate' | 'medium' | 'advanced' | 'hard';
 export type GameMode = 'practice' | 'timed';
 
 export interface GrammarQuestion {
