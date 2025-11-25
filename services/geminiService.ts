@@ -180,18 +180,20 @@ const getPromptForTopic = (topic: GrammarTopic, subTopic: string | undefined, co
         
         Task:
         1. Create interesting sentences describing completed actions in the past.
-        2. CRITICAL: Use a 50/50 mix of Regular verbs (walk->walked) and Irregular verbs (go->went, buy->bought).
+        2. CRITICAL: Use a balanced 50/50 mix of Regular verbs (walk->walked) and Irregular verbs (go->went, buy->bought).
         3. CRITICAL: Vary the sentence structures significantly. 
            - Do NOT start every sentence with "Yesterday" or "Last week".
            - Use time clauses at the start: "When the volcano erupted...", "After the movie ended...", "In 1969...".
            - Use complex sentences suitable for 10-14 year olds.
         4. "baseVerb" must be the infinitive form.
         5. Options must include: the correct past tense, the base form, the present tense, and a common mistake (like "buyed", "eated", "gode").
+        6. EXPLANATION: In the explanation, explicitly mention if the verb is regular (just add -ed) or irregular (changes form).
         
         Example:
         Sentence: "When the lights went out, I _______ a loud noise."
         baseVerb: "hear"
         correctAnswer: "heard"
+        explanation: "'Hear' is an irregular verb. The past tense is 'heard', not 'heared'."
         options: ["heard", "heared", "hear", "hearing"]
       `;
       

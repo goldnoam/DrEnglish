@@ -117,7 +117,7 @@ const TOPICS: TopicConfig[] = [
       { id: 'negatives_questions', label: 'Negatives & Questions', desc: "Didn't go, Did you see...?" },
       { id: 'mixed', label: 'Full Mix', desc: 'All past tense forms.' }
     ],
-    grammarRule: "📝 RULE: Completed actions in the past.\n• Regular verbs: Add -ed (play → played)\n• Irregular verbs: Change word (go → went, buy → bought)\n• Negative: Didn't + Base Verb (didn't go)."
+    grammarRule: "📝 RULE: Completed actions in the past.\n• Regular verbs: Add -ed (play → played)\n• Irregular verbs: Change word (go → went, see → saw, buy → bought)\n• Negative: Didn't + Base Verb (didn't go)."
   }
 ];
 
