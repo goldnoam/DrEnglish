@@ -20,6 +20,7 @@ interface TopicConfig {
   icon: string;
   subCategories: SubCategory[];
   grammarRule: string;
+  pronunciationTips: string;
 }
 
 const TOPICS: TopicConfig[] = [
@@ -35,7 +36,8 @@ const TOPICS: TopicConfig[] = [
       { id: 'future', label: 'Future Plans', desc: 'Fixed arrangements for the near future.' },
       { id: 'spelling', label: 'Spelling Rules', desc: 'Focus on -ing spelling (run -> running).' }
     ],
-    grammarRule: "📝 RULE: Use Subject + am/is/are + Verb-ing.\n• I am playing\n• He/She/It is playing\n• We/You/They are playing\n\nRemember: 'run' → 'running', 'make' → 'making'."
+    grammarRule: "📝 RULE: Use Subject + am/is/are + Verb-ing.\n• I am playing\n• He/She/It is playing\n• We/You/They are playing\n\nRemember: 'run' → 'running', 'make' → 'making'.",
+    pronunciationTips: "🗣️ TIP: The '-ing' sound /ŋ/ is nasal (like in 'song'). \nDon't pronounce the hard 'g' at the end! \nSay 'run-ning', not 'run-ning-guh'."
   },
   { 
     id: 'pronouns', 
@@ -49,7 +51,8 @@ const TOPICS: TopicConfig[] = [
       { id: 'mixed', label: 'Mixed Practice', desc: 'All pronouns mixed together.' },
       { id: 'spelling', label: 'Spelling Rules', desc: "Focus on pronoun spelling and forms (e.g., 'they' vs 'their')." }
     ],
-    grammarRule: "📝 RULE: Subject Pronouns replace the subject.\n• He (boy), She (girl), It (thing/animal)\n• You (one or many)\n• We (Me + Others)\n• They (Plural people OR things)\n\n⚠️ Common Confusion:\n• 'My friend and I' → We (not They)\n• 'The dogs' → They (not It)\n• Spelling: 'They' vs 'Their' vs 'There'."
+    grammarRule: "📝 RULE: Subject Pronouns replace the subject.\n• He (boy), She (girl), It (thing/animal)\n• You (one or many)\n• We (Me + Others)\n• They (Plural people OR things)\n\n⚠️ Common Confusion:\n• 'My friend and I' → We (not They)\n• 'The dogs' → They (not It)\n• Spelling: 'They' vs 'Their' vs 'There'.",
+    pronunciationTips: "🗣️ TIP: 'Th' in 'They' is voiced (your throat vibrates). \n'He' starts with a soft breathy /h/. \n'It' has a short /ɪ/ sound, distinct from 'Eat' /i:/."
   },
   { 
     id: 'has_have', 
@@ -63,7 +66,8 @@ const TOPICS: TopicConfig[] = [
       { id: 'mixed', label: 'Mixed', desc: 'Both sentences and questions.' },
       { id: 'spelling', label: 'Spelling Rules', desc: 'Focus on common spelling errors and exceptions with has/have.' }
     ],
-    grammarRule: "📝 RULE: To show possession:\n• He / She / It uses HAS\n• I / You / We / They use HAVE\n\nExample: She has a cat. We have a dog."
+    grammarRule: "📝 RULE: To show possession:\n• He / She / It uses HAS\n• I / You / We / They use HAVE\n\nExample: She has a cat. We have a dog.",
+    pronunciationTips: "🗣️ TIP: 'Has' ends with a /z/ sound (buzzing), not an /s/. \nIn fast speech, the 'h' is often silent: 'She's a cat' (She has a cat)."
   },
   { 
     id: 'am_is_are', 
@@ -77,7 +81,8 @@ const TOPICS: TopicConfig[] = [
       { id: 'contractions', label: 'Contractions', desc: "I'm, You're, He's..." },
       { id: 'spelling', label: 'Spelling Rules', desc: "Focus on common spelling errors in 'am', 'is', 'are' and their contractions." }
     ],
-    grammarRule: "📝 RULE: The verb 'To Be':\n• I am\n• He / She / It is\n• We / You / They are\n\nShort forms: I'm, He's, They're."
+    grammarRule: "📝 RULE: The verb 'To Be':\n• I am\n• He / She / It is\n• We / You / They are\n\nShort forms: I'm, He's, They're.",
+    pronunciationTips: "🗣️ TIP: Contractions are key! \n'I'm' rhymes with 'Time'. \n'They're' sounds exactly like 'There'. \n'We're' sounds like 'Weer'."
   },
   { 
     id: 'negatives', 
@@ -90,7 +95,8 @@ const TOPICS: TopicConfig[] = [
       { id: 'do_does_neg', label: 'Do/Does Negatives', desc: "don't, doesn't" },
       { id: 'mixed', label: 'Mixed Negatives', desc: "Combined practice." }
     ],
-    grammarRule: "📝 RULE: Making things negative:\n• is → isn't\n• are → aren't\n• do → don't\n• does → doesn't\n\nExample: He isn't home. They don't like pizza."
+    grammarRule: "📝 RULE: Making things negative:\n• is → isn't\n• are → aren't\n• do → don't\n• does → doesn't\n\nExample: He isn't home. They don't like pizza.",
+    pronunciationTips: "🗣️ TIP: Emphasize the 'n't'! \nMake sure the 't' at the end is crisp so people know you mean 'NO'. \n'Can't' vs 'Can' relies heavily on that final 't'."
   },
   {
     id: 'adjectives_adverbs',
@@ -103,7 +109,8 @@ const TOPICS: TopicConfig[] = [
       { id: 'irregular', label: 'Irregular Forms', desc: 'Good vs Well, Fast vs Fast.' },
       { id: 'mixed', label: 'Mixed Practice', desc: 'Challenging mix of all types.' }
     ],
-    grammarRule: "📝 RULE: \n• Adjectives describe NOUNS (The car is slow).\n• Adverbs describe VERBS (The car drives slowly).\n\nTip: Adverbs often end in -ly. Irregulars: Good → Well."
+    grammarRule: "📝 RULE: \n• Adjectives describe NOUNS (The car is slow).\n• Adverbs describe VERBS (The car drives slowly).\n\nTip: Adverbs often end in -ly. Irregulars: Good → Well.",
+    pronunciationTips: "🗣️ TIP: The '-ly' suffix is pronounced /li/ (like 'Lee'). \nDon't stress it too much, just a light addition to the word. \n'Quick-lee'."
   },
   {
     id: 'past_tense',
@@ -117,7 +124,8 @@ const TOPICS: TopicConfig[] = [
       { id: 'negatives_questions', label: 'Negatives & Questions', desc: "Didn't go, Did you see...?" },
       { id: 'mixed', label: 'Full Mix', desc: 'All past tense forms.' }
     ],
-    grammarRule: "📝 RULE: Completed actions in the past.\n• Regular verbs: Add -ed (play → played)\n• Irregular verbs: Change word (go → went, see → saw, buy → bought)\n• Negative: Didn't + Base Verb (didn't go)."
+    grammarRule: "📝 RULE: Completed actions in the past.\n• Regular verbs: Add -ed (play → played)\n• Irregular verbs: Change word (go → went, see → saw, buy → bought)\n• Negative: Didn't + Base Verb (didn't go).",
+    pronunciationTips: "🗣️ TIP: The '-ed' ending has 3 sounds!\n1. /t/ after unvoiced sounds (stopped, looked)\n2. /d/ after voiced sounds (played, loved)\n3. /ɪd/ ONLY after 't' or 'd' (wanted, needed)"
   }
 ];
 
@@ -132,9 +140,9 @@ const MODE_OPTIONS: { id: GameMode; label: string; desc: string }[] = [
   { id: 'timed', label: 'Timed Blitz', desc: '60 Seconds' },
 ];
 
-type ViewState = 'MENU' | 'SUBMENU' | 'GAME';
+type ViewState = 'MENU' | 'SUBMENU' | 'GAME' | 'REVIEW';
 
-const App: React.FC = () => {
+export const App: React.FC = () => {
   const [view, setView] = useState<ViewState>('MENU');
   const [selectedTopic, setSelectedTopic] = useState<GrammarTopic | null>(null);
   const [selectedSubTopic, setSelectedSubTopic] = useState<string | undefined>(undefined);
@@ -216,7 +224,7 @@ const App: React.FC = () => {
     if (view === 'GAME' && selectedTopic) {
       loadQuestions(selectedTopic, selectedSubTopic, 30, difficulty);
       setQuestionStartTime(Date.now());
-    } else if (view !== 'GAME') {
+    } else if (view !== 'GAME' && view !== 'REVIEW') {
       setQuestions([]);
       setCurrentQIndex(0);
       setStatus(AnswerStatus.IDLE);
@@ -269,6 +277,10 @@ const App: React.FC = () => {
   const handleBackToSubMenu = () => {
     setView('SUBMENU');
     setGameState(prev => ({ ...prev, isGameOver: false }));
+  };
+
+  const handleReviewMistakes = () => {
+    setView('REVIEW');
   };
 
   const handleCheck = () => {
@@ -517,7 +529,7 @@ const App: React.FC = () => {
             <p className="text-slate-400">Select a specific area to practice</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
              {topicConfig.subCategories.map(sub => (
                <button
                 key={sub.id}
@@ -531,7 +543,7 @@ const App: React.FC = () => {
           </div>
 
           {/* Grammar Rule Card */}
-          <div className="mt-8 bg-indigo-900/10 border border-indigo-500/30 p-8 rounded-3xl shadow-xl backdrop-blur-sm relative overflow-hidden">
+          <div className="bg-indigo-900/10 border border-indigo-500/30 p-8 rounded-3xl shadow-xl backdrop-blur-sm relative overflow-hidden mb-6">
             <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/10 rounded-full filter blur-3xl -translate-y-1/2 translate-x-1/2"></div>
             <div className="relative z-10">
               <h3 className="text-indigo-400 font-bold uppercase tracking-widest text-sm mb-4 flex items-center gap-2">
@@ -544,6 +556,22 @@ const App: React.FC = () => {
                 {topicConfig.grammarRule}
               </p>
             </div>
+          </div>
+          
+          {/* Pronunciation Guide Card */}
+          <div className="bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-xl relative overflow-hidden">
+             <div className="absolute top-0 left-0 w-48 h-48 bg-purple-600/10 rounded-full filter blur-3xl -translate-y-1/3 -translate-x-1/3"></div>
+             <div className="relative z-10">
+               <h3 className="text-purple-400 font-bold uppercase tracking-widest text-sm mb-4 flex items-center gap-2">
+                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                 </svg>
+                 Pronunciation Guide
+               </h3>
+               <p className="text-slate-300 whitespace-pre-line leading-relaxed font-medium">
+                 {topicConfig.pronunciationTips}
+               </p>
+             </div>
           </div>
 
           <Footer />
@@ -579,8 +607,61 @@ const App: React.FC = () => {
     );
   }
   
-  // 5. GAME OVER STATE
+  // 5. REVIEW MISTAKES VIEW
+  if (view === 'REVIEW') {
+    const mistakes = history.filter(h => !h.isCorrect);
+    
+    return (
+      <div className="min-h-screen bg-slate-950 py-12 px-4 font-sans text-slate-100">
+         <div className="max-w-4xl mx-auto">
+           <div className="flex items-center justify-between mb-8">
+             <h2 className="text-3xl font-black text-white">Review Mistakes</h2>
+             <Button onClick={handleBackToSubMenu}>Finish Review</Button>
+           </div>
+           
+           <div className="space-y-6">
+             {mistakes.length === 0 ? (
+               <p className="text-slate-400 text-lg">No mistakes found! You were perfect!</p>
+             ) : (
+               mistakes.map((item, index) => (
+                 <div key={index} className="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+                    <div className="text-xl text-slate-200 mb-4 font-medium">
+                       {item.question.sentencePre} <span className="text-indigo-400 border-b-2 border-indigo-500/50 px-1">_______</span> {item.question.sentencePost}
+                       <span className="text-slate-500 ml-2">({item.question.baseVerb})</span>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                       <div className="bg-red-900/10 border border-red-900/30 p-3 rounded-xl">
+                          <p className="text-xs text-red-400 font-bold uppercase mb-1">Your Answer</p>
+                          <p className="text-red-300 font-bold strike-through">{item.selectedOption}</p>
+                       </div>
+                       <div className="bg-green-900/10 border border-green-900/30 p-3 rounded-xl">
+                          <p className="text-xs text-green-400 font-bold uppercase mb-1">Correct Answer</p>
+                          <p className="text-green-300 font-bold">{item.question.correctAnswer}</p>
+                       </div>
+                    </div>
+                    
+                    <div className="text-slate-400 text-sm bg-slate-950 p-4 rounded-xl">
+                       <span className="font-bold text-indigo-400 uppercase text-xs mr-2">Explanation:</span>
+                       {item.question.explanation}
+                    </div>
+                 </div>
+               ))
+             )}
+           </div>
+           
+           <div className="mt-8 flex justify-center">
+              <Button onClick={handleBackToSubMenu} variant="secondary">Back to Topics</Button>
+           </div>
+         </div>
+      </div>
+    );
+  }
+
+  // 6. GAME OVER STATE
   if (gameState.isGameOver) {
+    const incorrectCount = history.filter(h => !h.isCorrect).length;
+    
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 font-sans">
         <div className="bg-slate-900 p-8 rounded-3xl shadow-2xl border border-slate-800 max-w-lg w-full text-center animate-in fade-in zoom-in duration-300">
@@ -635,6 +716,11 @@ const App: React.FC = () => {
           </div>
 
           <div className="flex flex-col gap-3">
+             {incorrectCount > 0 && (
+               <Button onClick={handleReviewMistakes} variant="danger" className="mb-2">
+                  Review Mistakes ({incorrectCount})
+               </Button>
+             )}
              <Button onClick={handleExport} variant="secondary">Download Report</Button>
              <Button onClick={handleBackToSubMenu}>Play Again (Same Topic)</Button>
              <Button onClick={handleBackToMenu} variant="secondary" className="!bg-slate-800 !text-slate-400 hover:!text-white hover:!bg-slate-700">Main Menu</Button>
@@ -646,7 +732,7 @@ const App: React.FC = () => {
 
   const currentQuestion = questions[currentQIndex];
 
-  // 6. GAME SCREEN
+  // 7. GAME SCREEN
   return (
     <div className="min-h-screen bg-slate-950 py-8 px-4 font-sans selection:bg-indigo-500/30 text-slate-200">
       <style>{`
@@ -817,8 +903,8 @@ const App: React.FC = () => {
 
         <Footer />
       </div>
-    </div>
-  );
-};
+    );
+  }
 
-export default App;
+  return null;
+};
