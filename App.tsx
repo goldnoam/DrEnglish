@@ -19,6 +19,7 @@ interface TopicConfig {
   color: string;
   icon: string;
   subCategories: SubCategory[];
+  grammarRule: string;
 }
 
 const TOPICS: TopicConfig[] = [
@@ -33,7 +34,8 @@ const TOPICS: TopicConfig[] = [
       { id: 'temporary', label: 'Temporary Situations', desc: 'Things happening around now but not permanent.' },
       { id: 'future', label: 'Future Plans', desc: 'Fixed arrangements for the near future.' },
       { id: 'spelling', label: 'Spelling Rules', desc: 'Focus on -ing spelling (run -> running).' }
-    ]
+    ],
+    grammarRule: "📝 RULE: Use Subject + am/is/are + Verb-ing.\n• I am playing\n• He/She/It is playing\n• We/You/They are playing\n\nRemember: 'run' → 'running', 'make' → 'making'."
   },
   { 
     id: 'pronouns', 
@@ -44,8 +46,10 @@ const TOPICS: TopicConfig[] = [
     subCategories: [
       { id: 'singular', label: 'Singular Pronouns', desc: 'I, You, He, She, It.' },
       { id: 'plural', label: 'Plural Pronouns', desc: 'We, You, They.' },
-      { id: 'mixed', label: 'Mixed Practice', desc: 'All pronouns mixed together.' }
-    ]
+      { id: 'mixed', label: 'Mixed Practice', desc: 'All pronouns mixed together.' },
+      { id: 'spelling', label: 'Spelling Rules', desc: "Focus on pronoun spelling and forms (e.g., 'they' vs 'their')." }
+    ],
+    grammarRule: "📝 RULE: Subject Pronouns replace the subject.\n• He (boy), She (girl), It (thing/animal)\n• You (one or many)\n• We (Me + Others)\n• They (Plural people OR things)\n\n⚠️ Common Confusion:\n• 'My friend and I' → We (not They)\n• 'The dogs' → They (not It)\n• Spelling: 'They' vs 'Their' vs 'There'."
   },
   { 
     id: 'has_have', 
@@ -56,8 +60,10 @@ const TOPICS: TopicConfig[] = [
     subCategories: [
       { id: 'affirmative', label: 'Positive Sentences', desc: 'I have, She has...' },
       { id: 'questions', label: 'Questions', desc: 'Do you have...? Does she have...?' },
-      { id: 'mixed', label: 'Mixed', desc: 'Both sentences and questions.' }
-    ]
+      { id: 'mixed', label: 'Mixed', desc: 'Both sentences and questions.' },
+      { id: 'spelling', label: 'Spelling Rules', desc: 'Focus on common spelling errors and exceptions with has/have.' }
+    ],
+    grammarRule: "📝 RULE: To show possession:\n• He / She / It uses HAS\n• I / You / We / They use HAVE\n\nExample: She has a cat. We have a dog."
   },
   { 
     id: 'am_is_are', 
@@ -68,8 +74,10 @@ const TOPICS: TopicConfig[] = [
     subCategories: [
       { id: 'statements', label: 'Statements', desc: 'I am happy. She is tall.' },
       { id: 'questions', label: 'Questions', desc: 'Are you ready? Is he here?' },
-      { id: 'contractions', label: 'Contractions', desc: "I'm, You're, He's..." }
-    ]
+      { id: 'contractions', label: 'Contractions', desc: "I'm, You're, He's..." },
+      { id: 'spelling', label: 'Spelling Rules', desc: "Focus on common spelling errors in 'am', 'is', 'are' and their contractions." }
+    ],
+    grammarRule: "📝 RULE: The verb 'To Be':\n• I am\n• He / She / It is\n• We / You / They are\n\nShort forms: I'm, He's, They're."
   },
   { 
     id: 'negatives', 
@@ -81,7 +89,8 @@ const TOPICS: TopicConfig[] = [
       { id: 'to_be_neg', label: 'To Be Negatives', desc: "isn't, aren't, 'm not" },
       { id: 'do_does_neg', label: 'Do/Does Negatives', desc: "don't, doesn't" },
       { id: 'mixed', label: 'Mixed Negatives', desc: "Combined practice." }
-    ]
+    ],
+    grammarRule: "📝 RULE: Making things negative:\n• is → isn't\n• are → aren't\n• do → don't\n• does → doesn't\n\nExample: He isn't home. They don't like pizza."
   },
   {
     id: 'adjectives_adverbs',
@@ -93,7 +102,8 @@ const TOPICS: TopicConfig[] = [
       { id: 'basic', label: 'Basic Rules', desc: 'Slow vs Slowly, Quick vs Quickly.' },
       { id: 'irregular', label: 'Irregular Forms', desc: 'Good vs Well, Fast vs Fast.' },
       { id: 'mixed', label: 'Mixed Practice', desc: 'Challenging mix of all types.' }
-    ]
+    ],
+    grammarRule: "📝 RULE: \n• Adjectives describe NOUNS (The car is slow).\n• Adverbs describe VERBS (The car drives slowly).\n\nTip: Adverbs often end in -ly. Irregulars: Good → Well."
   },
   {
     id: 'past_tense',
@@ -106,15 +116,14 @@ const TOPICS: TopicConfig[] = [
       { id: 'irregular', label: 'Irregular Verbs', desc: 'Go -> Went, See -> Saw.' },
       { id: 'negatives_questions', label: 'Negatives & Questions', desc: "Didn't go, Did you see...?" },
       { id: 'mixed', label: 'Full Mix', desc: 'All past tense forms.' }
-    ]
+    ],
+    grammarRule: "📝 RULE: Completed actions in the past.\n• Regular verbs: Add -ed (play → played)\n• Irregular verbs: Change word (go → went, buy → bought)\n• Negative: Didn't + Base Verb (didn't go)."
   }
 ];
 
 const DIFFICULTY_OPTIONS: { id: Difficulty; label: string }[] = [
   { id: 'easy', label: 'Easy' },
-  { id: 'intermediate', label: 'Intermediate' },
   { id: 'medium', label: 'Medium' },
-  { id: 'advanced', label: 'Advanced' },
   { id: 'hard', label: 'Hard' },
 ];
 
@@ -163,11 +172,19 @@ const App: React.FC = () => {
   const timerRef = useRef<number | null>(null);
 
   // Increased default count to 30 for comprehensive practice and better randomness
-  const loadQuestions = useCallback(async (topic: GrammarTopic, subTopic: string | undefined, count = 30, diff: Difficulty, append = false) => {
+  const loadQuestions = useCallback(async (topic: GrammarTopic, subTopicId: string | undefined, count = 30, diff: Difficulty, append = false) => {
     setLoading(true);
     setError(null);
     try {
-      const newQuestions = await fetchGrammarQuestions(topic, subTopic, count, diff);
+      // Lookup the full subcategory details to pass as rich context to the AI
+      const topicConfig = TOPICS.find(t => t.id === topic);
+      const subCategory = topicConfig?.subCategories.find(s => s.id === subTopicId);
+      
+      // If we found a specific subcategory, pass its Label and Description. Otherwise pass the ID.
+      // This ensures the AI gets "Spelling Rules: Focus on -ing..." instead of just "spelling"
+      const subTopicContext = subCategory ? `${subCategory.label}: ${subCategory.desc}` : subTopicId;
+
+      const newQuestions = await fetchGrammarQuestions(topic, subTopicContext, count, diff);
       setQuestions(prev => append ? [...prev, ...newQuestions] : newQuestions);
     } catch (err) {
       setError("Oops! Couldn't load questions. Check your internet.");
@@ -212,7 +229,12 @@ const App: React.FC = () => {
   // Pre-fetch more questions when running low (buffer around 28/30)
   useEffect(() => {
     if (view === 'GAME' && selectedTopic && questions.length > 0 && currentQIndex >= questions.length - 2 && !loading && !gameState.isGameOver) {
-       fetchGrammarQuestions(selectedTopic, selectedSubTopic, 15, difficulty).then(newQs => {
+       // Using the same context logic inside loadQuestions, but calling fetchGrammarQuestions directly here for pre-fetch
+       const topicConfig = TOPICS.find(t => t.id === selectedTopic);
+       const subCategory = topicConfig?.subCategories.find(s => s.id === selectedSubTopic);
+       const subTopicContext = subCategory ? `${subCategory.label}: ${subCategory.desc}` : selectedSubTopic;
+
+       fetchGrammarQuestions(selectedTopic, subTopicContext, 15, difficulty).then(newQs => {
          setQuestions(prev => [...prev, ...newQs]);
        });
     }
@@ -507,6 +529,23 @@ const App: React.FC = () => {
                </button>
              ))}
           </div>
+
+          {/* Grammar Rule Card */}
+          <div className="mt-8 bg-indigo-900/10 border border-indigo-500/30 p-8 rounded-3xl shadow-xl backdrop-blur-sm relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/10 rounded-full filter blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+            <div className="relative z-10">
+              <h3 className="text-indigo-400 font-bold uppercase tracking-widest text-sm mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                Grammar Rule
+              </h3>
+              <p className="text-slate-200 whitespace-pre-line leading-relaxed font-medium text-lg">
+                {topicConfig.grammarRule}
+              </p>
+            </div>
+          </div>
+
           <Footer />
         </div>
       </div>

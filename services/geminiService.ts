@@ -52,17 +52,11 @@ const getPromptForTopic = (topic: GrammarTopic, subTopic: string | undefined, co
     case 'easy':
       difficultyInstruction = "DIFFICULTY: EASY. Use short, simple SVO sentences (Subject-Verb-Object). Use high-frequency vocabulary. Distractors should be visually distinct and obviously wrong.";
       break;
-    case 'intermediate':
-      difficultyInstruction = "DIFFICULTY: INTERMEDIATE. Use slightly longer sentences. Include simple compound sentences (using 'and', 'but'). Vocabulary should be common school level. Distractors should check for basic agreement errors.";
-      break;
     case 'medium':
-      difficultyInstruction = "DIFFICULTY: MEDIUM. Use mixed sentence structures. Include time markers and context clues. Distractors should include common grammatical misconceptions.";
-      break;
-    case 'advanced':
-      difficultyInstruction = "DIFFICULTY: ADVANCED. Use complex sentence structures with dependent clauses. Context should be richer. Distractors should be plausible but grammatically incorrect in the specific context.";
+      difficultyInstruction = "DIFFICULTY: MEDIUM. Use mixed sentence structures. Include simple compound sentences (using 'and', 'but'). Vocabulary should be common school level. Distractors should check for basic agreement errors or common misconceptions.";
       break;
     case 'hard':
-      difficultyInstruction = "DIFFICULTY: HARD. Use sophisticated sentence structures and diverse contexts (Science, History, Literature). Focus on exceptions to rules and subtle nuances. Distractors should differ by only minor grammatical features.";
+      difficultyInstruction = "DIFFICULTY: HARD. Use sophisticated sentence structures, dependent clauses, and diverse contexts (Science, History, Literature). Focus on exceptions to rules and subtle nuances. Distractors should differ by only minor grammatical features.";
       break;
   }
 
